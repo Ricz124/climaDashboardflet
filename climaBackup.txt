@@ -1,0 +1,426 @@
+import requests
+
+tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
+capture = False
+tag = ''
+
+minMax_count = 0
+mmChuva_count = 0
+ventania_count = 0
+
+for i in tags.text:
+    if i != '\n':
+        tag = tag + i
+    else:
+        if 'class="-gray"' in tag:
+            tag = tag.split('"')
+            minMax = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace('\n', '')
+
+            if minMax.strip():
+                print(minMax)
+                minMax_count += 1
+
+            if minMax_count == 15:
+                break
+            
+        if 'class="_margin-l-5"' in tag:
+            tag = tag.split('"')
+            mmChuva = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace('\n', '')
+
+            if mmChuva.strip():
+                print(mmChuva)
+                mmChuva_count += 1
+
+            if mmChuva_count == 15:
+                break
+             
+        if 'class="arrow _margin-r-10"' in tag:
+            tag = tag.split('"')
+            ventania = str(tag[4]).replace('>', '').replace('</span', '').replace(' title=', '').replace('\n', '')
+
+            if ventania.strip():
+                print(ventania)
+                ventania_count += 1
+
+            if ventania_count == 15:
+                break
+            
+    
+        tag = ' '
+
+
+
+
+-------------------------------------------------------------------------------
+
+CODIGO V2
+
+
+import requests
+
+tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
+tag = ''
+
+# Listas para armazenar os valores capturados
+minMax_list = []
+mmChuva_list = []
+ventania_list = []
+
+for i in tags.text:
+    if i != '\n':
+        tag = tag + i
+    else:
+        # Captura minMax (temperatura mínima/máxima)
+        if 'class="-gray"' in tag:
+            tag = tag.split('"')
+            minMax = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            minMax_list.append(minMax)
+        
+        # Captura mmChuva (milímetros de chuva)
+        if 'class="_margin-l-5"' in tag:
+            tag = tag.split('"')
+            mmChuva = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            mmChuva_list.append(mmChuva)
+        
+        # Captura ventania (velocidade do vento)
+        if 'class="arrow _margin-r-10"' in tag:
+            tag = tag.split('"')
+            ventania = str(tag[4]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            ventania_list.append(ventania)
+
+        # Limpa a variável tag para a próxima iteração
+        tag = ''
+
+# Exibe os valores capturados
+print("Temperatura Min/Max:", minMax_list)
+print("Chuva (mm):", mmChuva_list)
+print("Ventania:", ventania_list)
+
+-------------------------------------------------------------------------------------
+
+
+CODIGO OG:
+
+import requests
+
+tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
+capture = False
+tag = ''
+
+for i in tags.text:
+    if i != '\n':
+        tag = tag + i
+    else:
+        if 'class="-gray"' in tag:
+            tag = tag.split('"')
+            minMax = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace('\n', '').replace(' title</p', '')
+            print(minMax)
+        if 'class="_margin-l-5"' in tag:
+            tag = tag.split('"')
+            mmChuva = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace('\n', '')
+
+        if 'class="arrow _margin-r-10"' in tag:
+            tag = tag.split('"')
+            ventania = str(tag[4]).replace('>', '').replace('</span', '').replace(' title=', '').replace('\n', '')
+    
+        tag = ' '
+
+
+----------------------------------------------------------------------------------------------------------
+
+CODIGO V3:
+
+import requests
+
+tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
+tag = ''
+
+minMax_list = []
+mmChuva_list = []
+ventania_list = []
+
+for i in tags.text:
+    if i != '\n':
+        tag = tag + i
+    else:
+
+        if 'class="-gray"' in tag:
+            tag = tag.split('"')
+            minMax = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace(' title</p', '').strip()
+            if minMax: 
+                minMax_list.append(minMax)
+        
+        if 'class="_margin-l-5"' in tag:
+            tag = tag.split('"')
+            mmChuva = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if mmChuva:
+                mmChuva_list.append(mmChuva)
+        
+        if 'class="arrow _margin-r-10"' in tag:
+            tag = tag.split('"')
+            ventania = str(tag[4]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if ventania: 
+                ventania_list.append(ventania)
+
+        tag = ''
+
+print("Temperatura Min/Max:", minMax_list)
+print("Chuva (mm):", mmChuva_list)
+print("Ventania:", ventania_list)
+
+
+-------------------------------------------------------------------------------------------------------------
+
+
+CODIGO V4:
+
+import requests
+import matplotlib.pyplot as plt
+import numpy as np
+
+tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
+tag = ''
+
+minMax_list = []
+mmChuva_list = []
+ventania_list = []
+
+for i in tags.text:
+    if i != '\n':
+        tag += i
+    else:
+        if 'class="-gray"' in tag:
+            tag = tag.split('"')
+            minMax = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace(' title</p', '').replace('°', '').strip()
+            if minMax: 
+                minMax_list.append(minMax)
+        
+        if 'class="_margin-l-5"' in tag:
+            tag = tag.split('"')
+            mmChuva = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if mmChuva:
+                mmChuva_list.append(mmChuva)
+        
+        if 'class="arrow _margin-r-10"' in tag:
+            tag = tag.split('"')
+            ventania = str(tag[4]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if ventania: 
+                ventania_list.append(ventania)
+
+        tag = ''
+
+#----------------------------------------------------matplotlib começa aqui mano
+
+temperaturas_minimas = [float(minMax_list[i]) for i in range(0, len(minMax_list), 2)]
+temperaturas_maximas = [float(minMax_list[i]) for i in range(1, len(minMax_list), 2)]
+
+dias = np.arange(len(temperaturas_minimas))
+
+plt.figure(figsize=(10, 6))
+plt.plot(dias, temperaturas_minimas, label='Temperaturas Mínimas', marker='o')
+plt.plot(dias, temperaturas_maximas, label='Temperaturas Máximas', marker='o')
+
+plt.title('Temperaturas Mínimas e Máximas - 15 Dias')
+plt.xlabel('Dias')
+plt.ylabel('Temperatura (°C)')
+plt.xticks(dias)
+plt.legend(loc='upper left')
+plt.grid()
+
+plt.show()
+
+#--------------------------------------------------------------------e termina aqui
+
+-------------------------------------------------------------------------------------------
+
+CODIGO V5:
+
+import requests
+import matplotlib.pyplot as plt
+import numpy as np
+import flet as ft
+
+# Coleta de dados da previsão do tempo
+tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
+tag = ''
+
+minMax_list = []
+mmChuva_list = []
+ventania_list = []
+
+for i in tags.text:
+    if i != '\n':
+        tag += i
+    else:
+        if 'class="-gray"' in tag:
+            tag = tag.split('"')
+            minMax = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace(' title</p', '').replace('°', '').strip()
+            if minMax: 
+                minMax_list.append(minMax)
+        
+        if 'class="_margin-l-5"' in tag:
+            tag = tag.split('"')
+            mmChuva = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if mmChuva:
+                mmChuva_list.append(mmChuva)
+        
+        if 'class="arrow _margin-r-10"' in tag:
+            tag = tag.split('"')
+            ventania = str(tag[4]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if ventania: 
+                ventania_list.append(ventania)
+
+        tag = ''
+
+# Separação das temperaturas mínimas e máximas
+temperaturas_minimas = [float(minMax_list[i]) for i in range(0, len(minMax_list), 2)]
+temperaturas_maximas = [float(minMax_list[i]) for i in range(1, len(minMax_list), 2)]
+dias = np.arange(len(temperaturas_minimas))
+
+# Criação do gráfico de temperaturas
+plt.figure(figsize=(10, 6))
+plt.plot(dias, temperaturas_minimas, label='Temperaturas Mínimas', marker='o')
+plt.plot(dias, temperaturas_maximas, label='Temperaturas Máximas', marker='o')
+
+plt.title('Temperaturas Mínimas e Máximas - 15 Dias')
+plt.xlabel('Dias')
+plt.ylabel('Temperatura (°C)')
+plt.xticks(dias)
+plt.legend(loc='upper left')
+plt.grid()
+
+plt.savefig('temperaturas.png')  # Salva o gráfico como PNG
+plt.close()
+
+# Função principal para exibir o gráfico e informações no Flet
+def main(page: ft.Page):
+    page.title = "Previsão do Tempo Detalhada"
+    page.scroll = ft.ScrollMode.ALWAYS
+
+    # Exibição da imagem do gráfico
+    img = ft.Image(src='temperaturas.png', width=800)
+
+    # Exibição das temperaturas e dados adicionais
+    temp_infos = ft.Column([
+        ft.Text("Temperaturas Mínimas: " + str(temperaturas_minimas)),
+        ft.Text("Temperaturas Máximas: " + str(temperaturas_maximas)),
+        ft.Text("Milímetros de Chuva: " + str(mmChuva_list)),
+        ft.Text("Velocidade do Vento: " + str(ventania_list)),
+    ], spacing=10)
+
+    # Adicionando o gráfico e os dados no layout
+    page.add(img, temp_infos)
+
+# Execução do aplicativo Flet
+ft.app(target=main)
+
+
+-------------------------------------------------------------------------------------------------------
+
+CODIGO FINAL:
+
+import requests
+import matplotlib.pyplot as plt
+import numpy as np
+import flet as ft
+import re
+
+tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
+tag = ''
+
+minMax_list = []
+mmChuva_list = []
+ventania_list = []
+porcentagem_chuva_list = []
+
+for i in tags.text:
+    if i != '\n':
+        tag += i
+    else:
+        if 'class="-gray"' in tag:
+            tag = tag.split('"')
+            minMax = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').replace(' title</p', '').replace('°', '').strip()
+            if minMax: 
+                minMax_list.append(minMax)
+        
+        if 'class="_margin-l-5"' in tag:
+            tag = tag.split('"')
+            mmChuva = str(tag[2]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if mmChuva:
+                mmChuva_list.append(mmChuva)
+                porcentagem_chuva = re.search(r'(\d+)%', tag[2])
+                if porcentagem_chuva:
+                    porcentagem_chuva_list.append(porcentagem_chuva.group(1))
+        
+        if 'class="arrow _margin-r-10"' in tag:
+            tag = tag.split('"')
+            ventania = str(tag[4]).replace('>', '').replace('</span', '').replace(' title=', '').strip()
+            if ventania: 
+                ventania_list.append(ventania)
+
+        tag = ''
+
+temperaturas_minimas = [float(minMax_list[i]) for i in range(0, len(minMax_list), 2)]
+temperaturas_maximas = [float(minMax_list[i]) for i in range(1, len(minMax_list), 2)]
+dias = np.arange(len(temperaturas_minimas))
+
+plt.figure(figsize=(10, 6))
+plt.plot(dias, temperaturas_minimas, label='Temperaturas Mínimas', marker='o')
+plt.plot(dias, temperaturas_maximas, label='Temperaturas Máximas', marker='o')
+
+plt.title('Temperaturas Mínimas e Máximas - 15 Dias')
+plt.xlabel('Dias')
+plt.ylabel('Temperatura (°C)')
+plt.xticks(dias)
+plt.legend(loc='upper left')
+plt.grid()
+
+plt.savefig('temperaturas.png')
+plt.close()
+
+def extrair_valor(valor):
+    return float(re.search(r"[\d.]+", valor).group(0)) if re.search(r"[\d.]+", valor) else 0.0
+
+previsao_dia = []
+for dia in range(len(temperaturas_minimas)):
+    previsao_dia.append({
+        "dia": dia + 1,
+        "temperatura_minima": temperaturas_minimas[dia],
+        "temperatura_maxima": temperaturas_maximas[dia],
+        "milimetros_chuva": extrair_valor(mmChuva_list[dia]) if dia < len(mmChuva_list) else 0.0,
+        "velocidade_vento": extrair_valor(ventania_list[dia]) if dia < len(ventania_list) else 0.0,
+        "porcentagem_chuva": porcentagem_chuva_list[dia] if dia < len(porcentagem_chuva_list) else "0"
+    })
+
+def main(page: ft.Page):
+    page.title = "Previsão do Tempo Detalhada"
+    page.scroll = ft.ScrollMode.ALWAYS
+
+    img = ft.Image(src='temperaturas.png', width=800)
+
+    temp_infos = ft.Column(spacing=10)
+    for previsao in previsao_dia:
+        card = ft.Card(
+            content=ft.Column(
+                [
+                    ft.Text(f"Dia {previsao['dia']}", weight="bold", size=20),
+                    ft.Row([
+                        ft.Text(f"Temperatura Mínima: {previsao['temperatura_minima']}°C", color=ft.colors.BLUE),
+                        ft.Text(f"Temperatura Máxima: {previsao['temperatura_maxima']}°C", color=ft.colors.RED)
+                    ]),
+                    ft.Row([
+                        ft.Text(f"Chuva: {previsao['milimetros_chuva']} mm", color=ft.colors.GREEN),
+                        ft.Text(f"Vento: {previsao['velocidade_vento']} km/h", color=ft.colors.ORANGE)
+                    ]),
+                    ft.Text(f"Chance de Chuva: {previsao['porcentagem_chuva']}%", color=ft.colors.PURPLE)
+                ],
+                alignment=ft.MainAxisAlignment.START,
+                spacing=5
+            ),
+            elevation=5
+        )
+        temp_infos.controls.append(card)
+
+    page.add(img, temp_infos)
+
+ft.app(target=main)
