@@ -2,7 +2,7 @@ import requests
 import matplotlib.pyplot as plt
 import numpy as np
 import flet as ft
-import re
+import re #a biblioteca re é pra conseguir pegar os valores da kilometragem do vento, milimitragem da chuva e chance da chuva, usando de referência o 'mm', '%' e o 'Km'
 
 tags = requests.get('https://www.climatempo.com.br/previsao-do-tempo/15-dias/cidade/558/saopaulo-sp')
 tag = ''
